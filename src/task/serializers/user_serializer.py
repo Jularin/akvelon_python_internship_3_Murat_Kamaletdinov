@@ -8,3 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ("id", "email", "first_name", "last_name")
 
+
+class CreateUserSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ('password',)
