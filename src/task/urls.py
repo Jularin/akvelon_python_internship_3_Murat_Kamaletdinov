@@ -5,8 +5,11 @@ from drf_yasg.views import get_schema_view
 from rest_framework import routers
 from rest_framework.permissions import IsAuthenticated
 
+from task.views import UserViewSet
+
 app_name = "task"
 router = routers.SimpleRouter()
+router.register('user', UserViewSet, 'user')
 
 
 class CustomSchemaGenerator(OpenAPISchemaGenerator):
