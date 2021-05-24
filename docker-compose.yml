@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  db:
+    image: postgres:13
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: task_1
+      POSTGRES_DB: task_1
+      POSTGRES_PASSWORD: task_1
+
+volumes:
+  postgres_data:
