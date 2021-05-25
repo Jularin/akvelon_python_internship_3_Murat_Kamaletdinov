@@ -37,7 +37,7 @@ def test_create_user_success(api_client):
     }
 
     r = api_client.post(
-        path="/api/user/create",
+        path="/api/user/",
         data={**user_data, "password": get_random_string()},
         format="json",
     )
@@ -51,14 +51,20 @@ def test_create_user_success(api_client):
 
 @pytest.mark.django_db
 def test_crete_user_fail(api_client):
+    email = get_random_string() + "@example.com"
     user_data = {
-        "email": get_random_string() + "@example.com",
+        "email": email,
         "first_name": get_random_string(),
         "last_name": get_random_string(),
-        "password": get_random_string(),
+        "password": email,  # send password same as email
     }
 
-    r = api_client.post(path="/api/user/create", data=user_data, format="json")
+    r = api_client.post(path="/api/user/", data=user_data, format="json")
+
+    assert r.status_code == status.HTTP_400_BAD_REQUEST
+
+    # sending without data
+    r = api_client.post(path="/api/user/")
 
     assert r.status_code == status.HTTP_400_BAD_REQUEST
 

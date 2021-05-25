@@ -16,5 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 class CreateUserSerializer(UserSerializer):
     """Serializer inherited from UserSerializer and added new field to create user"""
 
+    email = serializers.EmailField()
+
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ("password",)
