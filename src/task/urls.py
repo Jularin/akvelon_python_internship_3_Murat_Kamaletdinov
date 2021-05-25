@@ -9,7 +9,7 @@ from task.views import UserViewSet
 
 app_name = "task"
 router = routers.SimpleRouter()
-router.register('user', UserViewSet, 'user')
+router.register("user", UserViewSet, "user")
 
 
 class CustomSchemaGenerator(OpenAPISchemaGenerator):

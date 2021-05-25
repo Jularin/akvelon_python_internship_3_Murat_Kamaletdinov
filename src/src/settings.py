@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'task.CustomUser'
+AUTH_USER_MODEL = "task.CustomUser"
 
 # Application definition
 
