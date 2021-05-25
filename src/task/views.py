@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser
 from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import status
@@ -18,9 +19,10 @@ from task.services.user import validate_create_user_data
 
 
 class UserViewSet(
-    GenericViewSet, CreateModelMixin, DestroyModelMixin
+    GenericViewSet,
+    DestroyModelMixin
 ):
-    """Api view with basic crud"""
+    """Api view with basic CRUD"""
 
     serializer_class = UserSerializer
     queryset = CustomUser.objects.all()
@@ -75,4 +77,14 @@ class UserViewSet(
     @action(methods=["GET"], url_path="", detail=False, permission_classes=(IsAuthenticated,))
     def get_current_user(self, request: Request):
         return Response(self.serializer_class(self.request.user, context={"request": request}).data)
+
+    def destroy(self, request: Request, *args, **kwargs):
+        try:
+            if CustomUser.objects.get(pk=request.parser_context["kwargs"]["pk"]) != request.user:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+        except CustomUser.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        request.user.delete()
+        logout(request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

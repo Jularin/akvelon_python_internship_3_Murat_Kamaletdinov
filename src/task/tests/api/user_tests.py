@@ -2,6 +2,7 @@ import pytest
 from django.utils.crypto import get_random_string
 from rest_framework import status
 
+from task.models import CustomUser
 from task.serializers.user_serializer import UserSerializer
 from task.tests.factories.user_factory import UserFactory
 
@@ -124,18 +125,17 @@ def test_delete_user_success(api_client):
     user = UserFactory.create()
     api_client.force_authenticate(user=user)
 
-    r = api_client.delete(path="/api/user/")
+    r = api_client.delete(path=f"/api/user/{user.pk}/")
 
-    assert r.status_code == status.HTTP_200_OK
-
-    # check that user is deleted
-    r = api_client.get(path="/api/user")
-
-    assert r.status_code == status.HTTP_401_UNAUTHORIZED
+    assert r.status_code == status.HTTP_204_NO_CONTENT
 
 
 @pytest.mark.django_db
 def test_delete_user_fail(api_client):
-    r = api_client.delete(path="api/user")
+    user = UserFactory.create()
+    second_user = UserFactory.create()
+    api_client.force_authenticate(user=user)
 
-    assert r.status_code == status.HTTP_401_UNAUTHORIZED
+    r = api_client.delete(path=f"/api/user/{second_user.pk}/")
+
+    assert r.status_code == status.HTTP_403_FORBIDDEN
