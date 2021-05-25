@@ -15,17 +15,17 @@ def test_get_current_user_success(api_client):
     user = UserFactory.create()
     api_client.force_authenticate(user=user)
 
-    r = api_client.get(path=f"api/user{user.pk}")
+    r = api_client.get(path="/api/user/get_current_user/")
     assert r.status_code == status.HTTP_200_OK
     assert r.json()["email"] == user.email
     assert r.json()["first_name"] == user.first_name
-    assert r.json()["second_name"] == user.second_name
+    assert r.json()["last_name"] == user.last_name
 
 
 def test_get_current_user_fail(api_client):
-    r = api_client.get(path="api/user")
+    r = api_client.get(path="/api/user/get_current_user/")
 
-    assert r.status_code == status.HTTP_401_UNAUTHORIZED
+    assert r.status_code == status.HTTP_403_FORBIDDEN
 
 
 @pytest.mark.django_db

@@ -1,14 +1,14 @@
 from django.contrib.auth.models import AnonymousUser
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.mixins import (
     CreateModelMixin,
     RetrieveModelMixin,
-    UpdateModelMixin,
-    DestroyModelMixin,
+    DestroyModelMixin, ListModelMixin,
 )
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -18,14 +18,14 @@ from task.services.user import validate_create_user_data
 
 
 class UserViewSet(
-    GenericViewSet, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
+    GenericViewSet, CreateModelMixin, DestroyModelMixin
 ):
     """Api view with basic crud"""
 
     serializer_class = UserSerializer
     queryset = CustomUser.objects.all()
 
-    def partial_update(self, request, *args, **kwargs):
+    def partial_update(self, request: Request, *args, **kwargs):
         """Create partial update for patch API method"""
         instance = self.get_object()
 
@@ -47,7 +47,7 @@ class UserViewSet(
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=CreateUserSerializer)
-    def create(self, request, *args, **kwargs):
+    def create(self, request: Request, *args, **kwargs):
         email = request.data.get("email")
         password = request.data.get("password")
 
@@ -71,6 +71,8 @@ class UserViewSet(
         user.save()
         return Response(self.serializer_class(user, context={"request": request}).data)
 
-    # TODO create user
-    # TODO get user
-    # TODO delete user
+    @swagger_auto_schema(operation_id="user_read", request_body=no_body, responses={200: UserSerializer()})
+    @action(methods=["GET"], url_path="", detail=False, permission_classes=(IsAuthenticated,))
+    def get_current_user(self, request: Request):
+        return Response(self.serializer_class(self.request.user, context={"request": request}).data)
+
