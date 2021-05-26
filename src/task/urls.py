@@ -5,11 +5,12 @@ from drf_yasg.views import get_schema_view
 from rest_framework import routers
 from rest_framework.permissions import IsAuthenticated
 
-from task.views import UserViewSet
+from task.views import UserViewSet, TransactionViewSet
 
 app_name = "task"
 router = routers.SimpleRouter()
 router.register("user", UserViewSet, "user")
+router.register("transaction", TransactionViewSet, 'transaction')
 
 
 class CustomSchemaGenerator(OpenAPISchemaGenerator):

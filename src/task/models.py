@@ -14,7 +14,6 @@ class CustomUser(AbstractUser):
 
     first_name = models.CharField(verbose_name="name", max_length=150, blank=True)
     last_name = models.CharField(verbose_name="surname", max_length=150, blank=True)
-
     email = models.EmailField(verbose_name="email", unique=True)
 
     USERNAME_FIELD = "email"
@@ -23,3 +22,11 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Transaction(models.Model):
+    """Transaction model"""
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    amount = models.FloatField()
+    date = models.DateField(auto_now=True)
+

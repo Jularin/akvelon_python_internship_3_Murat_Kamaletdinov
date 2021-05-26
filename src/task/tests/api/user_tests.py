@@ -3,7 +3,7 @@ from django.utils.crypto import get_random_string
 from rest_framework import status
 
 from task.models import CustomUser
-from task.serializers.user_serializer import UserSerializer
+from task.serializers.user_serializers import UserSerializer
 from task.tests.factories.user_factory import UserFactory
 
 
