@@ -30,3 +30,8 @@ coverage run -m pytest && coverage report --rcfile=.coveragerc
 ```
 pytest
 ```
+
+### Run second task (fibonacci sequence) via django-admin commands (also create this func in src/task/utls)
+```
+python manage.py fibo [number]
+```
